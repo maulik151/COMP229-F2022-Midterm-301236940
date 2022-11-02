@@ -15,7 +15,6 @@ router.get('/', (req, res, next) => {
       return console.error(err);
     }
     else {
-      console.log("====get else")
       res.render('books/index', {
         title: 'Books',
         books: books
@@ -26,7 +25,6 @@ router.get('/', (req, res, next) => {
 
 //  GET the Book Details page in order to add a new Book
 router.get('/add', (req, res, next) => {
-  console.log("===Display add function called")
   res.render('books/details', { title: 'Add Book', books: "" })
 
 });
@@ -34,7 +32,6 @@ router.get('/add', (req, res, next) => {
 // POST process the Book Details page and create a new Book - CREATE
 router.post('/add', (req, res, next) => {
 
-  console.log("====processAddPage")
   let newBook = book({
     "Title": req.body.title,
     "Description": req.body.Description,
@@ -42,7 +39,6 @@ router.post('/add', (req, res, next) => {
     "Author": req.body.author,
     "Genre": req.body.genre
   });
-  console.log("=====add contact===", req.body)
   book.create(newBook, (err, Book) => {
     if (err) {
       console.log(err);
@@ -51,7 +47,6 @@ router.post('/add', (req, res, next) => {
     else {
       // refresh the book list
       res.redirect('/books');
-      console.log("====else section")
     }
   });
 
@@ -61,7 +56,6 @@ router.post('/add', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
 
   let id = req.params.id;
-  console.log("=====id", req.params)
   book.findById(id, (err, bookToEdit) => {
     if (err) {
       console.log(err);
@@ -69,7 +63,6 @@ router.get('/:id', (req, res, next) => {
     }
     else {
       //show the edit view
-      console.log("====book edit", bookToEdit)
       res.render('books/details', { title: 'Edit Book', books: bookToEdit })
     }
   });
@@ -79,7 +72,7 @@ router.get('/:id', (req, res, next) => {
 router.post('/:id', (req, res, next) => {
   let id = req.params.id
 
-  let updatedBook = book({
+  let updated = book({
     "_id": id,
     "Title": req.body.title,
     "Description": req.body.Description,
@@ -87,15 +80,13 @@ router.post('/:id', (req, res, next) => {
     "Author": req.body.author,
     "Genre": req.body.genre
   });
-  console.log("===updated contact list====", updatedBook)
-  book.updateOne({ _id: id }, updatedBook, (err) => {
+  book.updateOne({ _id: id }, updated, (err) => {
     if (err) {
       console.log(err);
       res.end(err);
     }
     else {
       // refresh the book list
-      console.log("====update edit record", updatedBook)
       res.redirect('/books');
     }
   });
